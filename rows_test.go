@@ -96,6 +96,19 @@ func TestRowsIterator(t *testing.T) {
 	assert.Equal(t, expectedNumRow, rowCount)
 }
 
+func TestRowsGetStyleID(t *testing.T) {
+	sheetName, expectedRowStyleID := "Sheet2", 1
+	f, err := OpenFile(filepath.Join("test", "Book1.xlsx"))
+	require.NoError(t, err)
+
+	rows, err := f.Rows(sheetName)
+	require.NoError(t, err)
+	rows.Next()
+	rowStyleID := rows.GetStyleID()
+
+	assert.Equal(t, expectedRowStyleID, rowStyleID)
+}
+
 func TestRowsError(t *testing.T) {
 	f, err := OpenFile(filepath.Join("test", "Book1.xlsx"))
 	if !assert.NoError(t, err) {

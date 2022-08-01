@@ -80,6 +80,7 @@ type Rows struct {
 	sst                     *xlsxSST
 	decoder                 *xml.Decoder
 	token                   xml.Token
+	styleID                 int
 }
 
 // Next will return true if find the next row element.
@@ -101,6 +102,9 @@ func (rows *Rows) Next() bool {
 					rows.curRow = rowNum
 				}
 				rows.token = token
+				if styleID, _ := attrValToInt("s", xmlElement.Attr); styleID != 0 {
+					rows.styleID = styleID
+				}
 				return true
 			}
 		case xml.EndElement:
@@ -109,6 +113,14 @@ func (rows *Rows) Next() bool {
 			}
 		}
 	}
+}
+
+// GetStyleID provise a function to get the current Rows' style ID. It will
+// return 0 when no style has been set.
+//
+//    styleID := rows.GetStyleID()
+func (rows *Rows) GetStyleID() int {
+	return rows.styleID
 }
 
 // Error will return the error when the error occurs.
